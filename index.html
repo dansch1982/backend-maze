@@ -46,7 +46,7 @@
                 const element = data[key];
                 if (key === "image") {
                     const image = document.querySelector('.map')
-                    image.style.backgroundImage = `url('./images/${element.split('\\')[1]}')`;
+                    image.style.backgroundImage = `url('./images/${element.split(/[\\/]/).pop()}')`;
 
                 } else {
                     const button = document.querySelector('.' + key)
