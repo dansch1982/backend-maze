@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="test.css">
+    <title>Maze</title>
+</head>
+
+<body>
+    <section>
+        <section class="map">
+            <img class="image" src="./images/nnnn.png" alt="">
+        </section>
+        <section class="nav">
+                <button class="up"><img src="button.png" alt=""></button>
+                <button class="left"><img src="button.png" alt=""></button>
+                <button class="right"><img src="button.png" alt=""></button>
+                <button class="down"><img src="button.png" alt=""></button>
+        </section>
+    </section>
+
+    <script>
+        const nav = document.querySelector('.nav')
+        const buttons = nav.querySelectorAll('button')
+        buttons.forEach(button => {
+            button.addEventListener('click', async () => {
+                const searchParams = new URLSearchParams()
+                searchParams.append("from", button.classList)
+                getData(searchParams)
+            })
+        })
+
+        async function getData(searchParams) {
+
+            const url = new URL('getTile', window.location.href)
+
+            if (searchParams) {
+                for (const [key, value] of searchParams) {
+                    url.searchParams.append(key, value)
+                }
+            }
+
+            data = await (await fetch(url)).json()
+            for (const key in data) {
+                const element = data[key];
+                if (key === "image") {
+                    document.querySelector('.map img').src = element
+                } else {
+                    const button = document.querySelector('.' + key)
+                    if (element === true) {
+                        button.removeAttribute('disabled');
+                    } else {
+                        button.disabled = true;
+                    }
+                }
+            }
+        }
+
+        class Area {
+            constructor(left, up, right, down, image) {
+
+            }
+        }
+        
+        document.addEventListener('keydown', () => {
+            if (event.key.startsWith("Arrow")) {
+                const button = document.querySelector("."+event.key.substr(5).toLowerCase())
+                button.click()
+                button.classList.toggle("active")
+                setTimeout(() => {
+                    button.classList.toggle("active")
+                }, 100);
+            }
+        })
+
+        getData()
+    </script>
+
+</body>
+
+</html>
