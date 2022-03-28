@@ -11,14 +11,12 @@
 
 <body>
     <section>
-        <section class="map">
-            <img class="image" src="" alt="">
-        </section>
+        <section class="map"></section>
         <section class="nav">
-                <button class="up"><img src="button.png" alt=""></button>
-                <button class="left"><img src="button.png" alt=""></button>
-                <button class="right"><img src="button.png" alt=""></button>
-                <button class="down"><img src="button.png" alt=""></button>
+                <button class="up"></button>
+                <button class="left"></button>
+                <button class="right"></button>
+                <button class="down"></button>
         </section>
     </section>
 
@@ -47,18 +45,17 @@
             for (const key in data) {
                 const element = data[key];
                 if (key === "image") {
-                    const image = document.querySelector('.map img')
-                    /* image.classList.toggle('hidden')
-                    setTimeout(() => {
-                        image.classList.toggle('hidden')
-                    }, 500); */
-                    image.src = element
+                    const image = document.querySelector('.map')
+                    image.style.backgroundImage = `url('./images/${element.split('\\')[1]}')`;
+
                 } else {
                     const button = document.querySelector('.' + key)
                     if (element === true) {
                         button.removeAttribute('disabled');
+                        button.classList.remove('disabled')
                     } else {
                         button.disabled = true;
+                        button.classList.add('disabled')
                     }
                 }
             }
@@ -74,9 +71,9 @@
             if (event.key.startsWith("Arrow")) {
                 const button = document.querySelector("."+event.key.substr(5).toLowerCase())
                 button.click()
-                button.classList.toggle("active")
+                button.classList.toggle('active')
                 setTimeout(() => {
-                    button.classList.toggle("active")
+                    button.classList.toggle('active')
                 }, 100);
             }
         })
