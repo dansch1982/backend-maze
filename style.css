@@ -23,7 +23,7 @@ body section .map {
   background-repeat: no-repeat;
   background-position: bottom;
   background-size: contain;
-  transition: background-image 0.5s ease-in;
+  transition: opacity 0.5s ease-in;
 }
 body section .nav {
   display: grid;
@@ -78,4 +78,8 @@ body section .nav > :nth-child(4) {
 
 .disabled {
   background-color: darkred !important;
+}
+
+.hidden {
+  opacity: 0 !important;
 }/*# sourceMappingURL=style.css.map */

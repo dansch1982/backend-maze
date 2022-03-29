@@ -46,7 +46,11 @@
                 const element = data[key];
                 if (key === "image") {
                     const image = document.querySelector('.map')
-                    image.style.backgroundImage = `url('./images/${element.split(/[\\/]/).pop()}')`;
+                    image.classList.toggle('hidden')
+                    setTimeout(() => {
+                        image.style.backgroundImage = `url('./images/${element.split(/[\\/]/).pop()}')`;
+                        image.classList.toggle('hidden')
+                    }, 500);
 
                 } else {
                     const button = document.querySelector('.' + key)
