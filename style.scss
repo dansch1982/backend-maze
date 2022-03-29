@@ -22,7 +22,6 @@ body {
             background-repeat: no-repeat;
             background-position: bottom;
             background-size: contain;
-            //transition: background-image 0.5s ease-in;
             transition: opacity 0.5s ease-in;
         }
         .nav {
@@ -44,7 +43,7 @@ body {
                 background-repeat: no-repeat;
                 border: none;
                 filter: drop-shadow(0 0 5px black);
-                transition: 0.2s ease-in;
+                transition: 0.1s ease-in;
                 &:active {
                     @extend .active;
                 }
