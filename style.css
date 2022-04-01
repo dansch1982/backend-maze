@@ -5,81 +5,26 @@
 }
 
 body {
-  background-color: lightblue;
+  background-color: darkslategrey;
   width: 100vw;
   height: 100vh;
   display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: -webkit-max-content -webkit-max-content;
+  grid-template-rows: max-content max-content;
   justify-content: center;
-  align-items: center;
 }
-body section {
-  width: 100%;
-  height: 80%;
-}
-body section .map {
-  background: url("./images/nnnn.png");
-  background-repeat: no-repeat;
-  background-position: bottom;
-  background-size: contain;
-  transition: opacity 0.5s ease-in;
-}
-body section .nav {
+body .map {
+  background-color: #3F744D;
   display: grid;
-  grid-template-columns: repeat(3, -webkit-max-content);
-  grid-template-columns: repeat(3, max-content);
-  grid-template-rows: repeat(2, -webkit-max-content);
-  grid-template-rows: repeat(2, max-content);
-  height: -webkit-max-content;
-  height: -moz-max-content;
-  height: max-content;
-  justify-content: center;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 1rem;
+  grid-template-columns: repeat(5, min(20vh, 20vw));
+  grid-template-rows: repeat(4, min(20vh, 20vw));
 }
-body section .nav button {
-  border-radius: 50%;
-  width: min(25vw, 12.5vh);
-  height: min(25vw, 12.5vh);
-  background: url("./button.png"), #3F744D;
-  background-size: cover;
+body .map article {
   background-position: center;
   background-repeat: no-repeat;
-  border: none;
-  filter: drop-shadow(0 0 5px black);
-  transition: 0.1s ease-in;
+  background-size: contain;
 }
-body section .nav > :nth-child(1) {
-  grid-column: 2;
-  grid-row: 1;
-}
-body section .nav > :nth-child(2) {
-  grid-column: 1;
-  grid-row: 2;
-  transform: rotate(270deg);
-}
-body section .nav > :nth-child(3) {
-  grid-column: 3;
-  grid-row: 2;
-  transform: rotate(90deg);
-}
-body section .nav > :nth-child(4) {
-  grid-column: 2;
-  grid-row: 2;
-  transform: rotate(180deg);
-}
-
-.active, body section .nav button:active {
-  border: 3px solid green !important;
-  filter: drop-shadow(0 0 5px green) !important;
-}
-
-.disabled {
-  background-color: darkred !important;
-}
-
-.hidden {
-  opacity: 0 !important;
+body .nav {
+  height: min(20vh, 20vw);
+  background-color: darkcyan;
 }/*# sourceMappingURL=style.css.map */

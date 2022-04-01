@@ -10,17 +10,48 @@
 </head>
 
 <body>
-    <section>
-        <section class="map"></section>
+        <section class="map">
+
+        </section>
         <section class="nav">
-                <button class="up"></button>
+                <!-- <button class="up"></button>
                 <button class="left"></button>
                 <button class="right"></button>
-                <button class="down"></button>
+                <button class="down"></button> -->
         </section>
-    </section>
 
     <script>
+        async function fillMap() {
+            const map = document.querySelector('.map')
+            const array = getComputedStyle(document.querySelector('.map')).grid.split(' ')
+            array.splice(nthIndexOfArray(array, "/", 2))
+            const array2 = array.splice(array.indexOf('/'))
+            array2.splice(0, 1)
+
+            const url = new URL('getTile', "http://127.0.0.1:8080")
+            
+            for (let i = 0; i < (array.length * array2.length); i++) {
+                
+                const article = document.createElement('article')
+                const data = await (await fetch(url)).json()
+                console.log(data.image)
+                article.style.backgroundImage = `url(./${data.image.replace("\\", "/")})`
+                map.appendChild(article)
+            }
+        }
+        fillMap()
+        function nthIndexOfArray(array, item, index) {
+            if (index < 1 || isNaN(index) || array.indexOf(item) < 0) {
+                return -1
+            } else if (index === 1) {
+                return array.indexOf(item)
+            } else {
+                const newIndex = array.indexOf(item ) + 1
+                const newArray = array.slice(newIndex)
+                return newIndex + nthIndexOfArray(newArray, item, index - 1)
+            }
+        }
+
         const nav = document.querySelector('.nav')
         const buttons = nav.querySelectorAll('button')
         buttons.forEach(button => {

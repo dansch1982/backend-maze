@@ -12,12 +12,18 @@ http.createServer((req, res) => {
             res.writeHead(404, {})
             res.end()
         } else {
+            res.writeHead(200, {
+                'Access-Control-Allow-Origin' : "*"
+            })
             const readStream = fs.createReadStream(file);
             readStream.pipe(res, {
                 end: true
             });
         }
     } else {
+        res.writeHead(200, {
+            'Access-Control-Allow-Origin' : "*"
+        })
         if (path.basename(file) === "getTile") {
             const from = url.searchParams.get('from')
             
