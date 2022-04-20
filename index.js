@@ -1,61 +1,55 @@
-const http = require('http')
-const fs = require('fs')
-const path = require('path')
+const fs = require("fs");
+const path = require("path");
 
-http.createServer((req, res) => {
-    const host = 'http' + '://' + req.headers.host + '/';
-    const url = new URL(req.url, host)
-    const file = path.join(__dirname, url.pathname === "/" ? "index.html" : url.pathname)
-    console.log(file)
-    if (path.extname(req.url)) {
-        if (!fs.existsSync(file)) {
-            res.writeHead(404, {})
-            res.end()
-        } else {
-            res.writeHead(200, {
-                'Access-Control-Allow-Origin' : "*"
-            })
-            const readStream = fs.createReadStream(file);
-            readStream.pipe(res, {
-                end: true
-            });
-        }
-    } else {
-        res.writeHead(200, {
-            'Access-Control-Allow-Origin' : "*"
-        })
-        if (path.basename(file) === "getTile") {
-            const from = url.searchParams.get('from')
-            
-            const files = fs.readdirSync(path.join(__dirname, "images"))
-            let image = files[Math.floor(Math.random() * files.length)]
-            
-            let directions = path.parse(image).name.split('')
-            const array = ["left", "up", "right", "down"]
-            
-            if (from) {
-                let index = array.indexOf(from)
-                index = array.indexOf((array[index + 2] ? array[index + 2] : array[index - 2]))
-                while (directions[index] === "n") {
-                    image = files[Math.floor(Math.random() * files.length)]
-                    directions = path.parse(image).name.split('')
-                }
-            }
+const Server = require("./services/server");
 
-            const object = {}
-            directions.forEach((direction, index) => {
-                object[array[index]] = direction === "y" ? true : false
-            })
+const server = new Server({
+  methods: "GET",
+  headers: {
+    "Access-Control-Allow-Origin": "*",
+  },
+});
 
-            object.image = path.join("images", image)
+server.listen(8080);
 
-            res.end(JSON.stringify(object))
-        } else {
-            const readStream = fs.createReadStream(path.join(__dirname, "index.html"));
-            readStream.pipe(res, {
-                end: true
-            });
-        }
+server.static("public");
+
+server.default("get", (req, res) => {
+  res.status(302).setHeader("Location", "index.html").end();
+});
+
+server.get("getTile", (req, res) => {
+  const open = req.url.searchParams.get("open");
+
+  const files = fs.readdirSync(path.join(__dirname, "public", "images"));
+  let image = files[Math.floor(Math.random() * files.length)];
+
+  let directions = path.parse(image).name.split("");
+  const array = ["left", "up", "right", "down"];
+
+  function testImage() {
+    for (let i = 0; i < open.length; i++) {
+      const letter = open[i];
+      if (letter === "?") {
+        continue;
+      } else if (letter !== image[i]) {
+        return false;
+      }
     }
+    return true;
+  }
 
-}).listen(process.env.PORT || 8080)
+  while (!testImage()) {
+    image = files[Math.floor(Math.random() * files.length)];
+  }
+
+  const object = {};
+  directions = path.parse(image).name.split("");
+  directions.forEach((direction, index) => {
+    object[array[index]] = direction === "y" ? true : false;
+  });
+
+  object.image = path.join("images", image);
+
+  res.status(200).json(object);
+});

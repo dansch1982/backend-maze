@@ -20,11 +20,30 @@ body .map {
   grid-template-rows: repeat(4, min(20vh, 20vw));
 }
 body .map article {
+  opacity: 0%;
+  transition: ease-in 200ms;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
 }
+body .map article .player {
+  width: 100%;
+  height: 100%;
+}
+body .map article .player img {
+  width: 15%;
+}
 body .nav {
   height: min(20vh, 20vw);
   background-color: darkcyan;
+}
+
+.show {
+  opacity: 100% !important;
+}
+.show * {
+  opacity: 100% !important;
 }/*# sourceMappingURL=style.css.map */
