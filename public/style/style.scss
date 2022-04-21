@@ -44,13 +44,33 @@ body {
         background-color: darkcyan;
         display: flex;
         flex-direction: column;
+        :nth-child(2) {
+            :nth-child(1) {
+                :nth-child(1) {
+                    transform: rotate(-90deg);
+                }
+            }
+            :nth-child(2) {
+                :nth-child(1) {
+                    transform: rotate(180deg);
+                }
+            }
+            :nth-child(3) {
+                :nth-child(1) {
+                    transform: rotate(90deg);
+                }
+            }
+        }
         section {
             display: flex;
             flex-direction: row;
             justify-content: center;
             align-items: center;
             height: 50%;
-            article {
+            
+            button {
+                border: none;
+                background-color: unset;
                 position: relative;
                 display: flex;
                 justify-content: center;

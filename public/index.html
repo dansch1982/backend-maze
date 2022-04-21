@@ -12,11 +12,11 @@
 <body>
     <section class="map"><article class="player"><img></article></section>
     <section class="nav">
-        <section><article><img><img></article></section>
+        <section><button class="up"><img><img></button></section>
         <section>
-            <article><img><img></article>
-            <article><img><img></article>
-            <article><img><img></article>
+            <button class="left"><img><img></button>
+            <button class="down"><img><img></button>
+            <button class="right"><img><img></button>
         </section>
     </section>
 
@@ -152,8 +152,9 @@
         const nav = document.querySelector('.nav')
         const buttons = nav.querySelectorAll('button')
         buttons.forEach(button => {
-            button.addEventListener('click', () => {
-
+            button.addEventListener('click', function() {
+                const direction = this.classList[0]
+                App.move(direction)
             })
         })
 

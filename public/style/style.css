@@ -42,6 +42,15 @@ body .nav {
   display: flex;
   flex-direction: column;
 }
+body .nav :nth-child(2) :nth-child(1) :nth-child(1) {
+  transform: rotate(-90deg);
+}
+body .nav :nth-child(2) :nth-child(2) :nth-child(1) {
+  transform: rotate(180deg);
+}
+body .nav :nth-child(2) :nth-child(3) :nth-child(1) {
+  transform: rotate(90deg);
+}
 body .nav section {
   display: flex;
   flex-direction: row;
@@ -49,18 +58,20 @@ body .nav section {
   align-items: center;
   height: 50%;
 }
-body .nav section article {
+body .nav section button {
+  border: none;
+  background-color: unset;
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
 }
-body .nav section article img {
+body .nav section button img {
   height: 100%;
   content: url("../key.png");
 }
-body .nav section article :nth-child(1) {
+body .nav section button :nth-child(1) {
   padding: min(2.5vh, 2.5vw);
   position: absolute;
   content: url("../arrow.png");
