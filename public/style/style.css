@@ -39,6 +39,31 @@ body .map article .player img {
 body .nav {
   height: min(20vh, 20vw);
   background-color: darkcyan;
+  display: flex;
+  flex-direction: column;
+}
+body .nav section {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 50%;
+}
+body .nav section article {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+body .nav section article img {
+  height: 100%;
+  content: url("../key.png");
+}
+body .nav section article :nth-child(1) {
+  padding: min(2.5vh, 2.5vw);
+  position: absolute;
+  content: url("../arrow.png");
 }
 
 .show {
@@ -46,4 +71,8 @@ body .nav {
 }
 .show * {
   opacity: 100% !important;
+}
+
+.player img {
+  content: url("../player.png");
 }/*# sourceMappingURL=style.css.map */

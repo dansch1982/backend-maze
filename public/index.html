@@ -10,15 +10,14 @@
 </head>
 
 <body>
-    <article class="player"><img src="player.png" alt=""></article>
-    <section class="map">
-        
-    </section>
+    <section class="map"><article class="player"><img></article></section>
     <section class="nav">
-        <!-- <button class="up"></button>
-                <button class="left"></button>
-                <button class="right"></button>
-                <button class="down"></button> -->
+        <section><article><img><img></article></section>
+        <section>
+            <article><img><img></article>
+            <article><img><img></article>
+            <article><img><img></article>
+        </section>
     </section>
 
     <script>
@@ -160,12 +159,6 @@
 
         document.addEventListener('keydown', () => {
             if (event.key.startsWith("Arrow")) {
-                /* const button = document.querySelector("." + event.key.substr(5).toLowerCase())
-                button.click()
-                button.classList.toggle('active')
-                setTimeout(() => {
-                    button.classList.toggle('active')
-                }, 100); */
              const direction = event.key.substr(5).toLowerCase()
              App.move(direction)
             }
