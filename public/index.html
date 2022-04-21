@@ -133,6 +133,11 @@
                     await this.drawTile(direction)
                 }
                 this.drawPlayer()
+                this.checkConditions()
+            },
+            checkConditions() {
+                const [x, y] = this.mapSize
+                console.log(Object.keys(this.explored).length >= x * y)
             }
         }
         App.start()
