@@ -59,7 +59,7 @@ class Server {
     try {
       const callback =
         this.#methods[method]["URIs"][uri] || this.#methods[method]["default"];
-      callback.function(req, res, uri.args);
+      callback.function(req, res, callback.args);
     } catch (error) {
       console.log(error);
       res.status(404).text("Page not found.");
