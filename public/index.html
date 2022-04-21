@@ -121,9 +121,9 @@
         checkWinConditions() {
           const [x, y] = this.mapSize;
           if (Object.keys(this.explored).length >= x * y) {
-            console.log(`Victory!\nAll ${x*y} tiles explored.`);
+            alert(`Victory!\nAll ${x*y} tiles explored.`);
           } else if (!this.checkOpen()) {
-            console.log(`Game over!\nYou explored ${Object.keys(this.explored).length} / ${x*y} tiles.`);
+            alert(`Game over!\nYou explored ${Object.keys(this.explored).length} / ${x*y} tiles.`);
           }
         },
         checkOpen() {
