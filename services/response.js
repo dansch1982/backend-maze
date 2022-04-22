@@ -8,7 +8,8 @@ class Response {
         "text/html": [".htm", ".html"],
         "text/css": [".css"],
         "text/plain": ".txt",
-        "image/jpeg": [".jpeg", ".jpg"]
+        "image/jpeg": [".jpeg", ".jpg"],
+        "image/svg+xml": [".svg"]
     } 
     constructor(res) {
         this.#res = res
