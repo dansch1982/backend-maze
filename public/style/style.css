@@ -52,11 +52,22 @@ body .nav :nth-child(2) :nth-child(3) :nth-child(1) {
   transform: rotate(90deg);
 }
 body .nav section {
+  position: relative;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   height: 50%;
+  width: 100%;
+}
+body .nav section :nth-child(4) {
+  position: absolute;
+  right: 0;
+}
+body .nav section :nth-child(4) :nth-child(1) {
+  padding: min(2.5vh, 2.5vw);
+  position: absolute;
+  content: url("../reload.svg");
 }
 body .nav section button {
   border: none;
@@ -65,6 +76,9 @@ body .nav section button {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
   height: 100%;
 }
 body .nav section button img {
