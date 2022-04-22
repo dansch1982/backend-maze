@@ -80,6 +80,7 @@ body .nav section button {
   width: -moz-max-content;
   width: max-content;
   height: 100%;
+  outline: none;
 }
 body .nav section button img {
   height: 100%;
