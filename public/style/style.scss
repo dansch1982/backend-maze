@@ -62,12 +62,22 @@ body {
             }
         }
         section {
+            position: relative;
             display: flex;
             flex-direction: row;
             justify-content: center;
             align-items: center;
             height: 50%;
-            
+            width: 100%;
+            :nth-child(4) {
+                position: absolute;
+                right: 0;
+                :nth-child(1) {
+                    padding: min(2.5vh, 2.5vw);
+                    position: absolute;
+                    content:url("../reload.svg");
+                }
+            }
             button {
                 border: none;
                 background-color: unset;
@@ -75,6 +85,7 @@ body {
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                width: max-content;
                 height: 100%;
                 img {
                     height: 100%;
