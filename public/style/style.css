@@ -82,6 +82,9 @@ body .nav section button {
   height: 100%;
   outline: none;
 }
+body .nav section button:hover {
+  cursor: pointer;
+}
 body .nav section button img {
   height: 100%;
   content: url("../key.png");
@@ -90,6 +93,10 @@ body .nav section button :nth-child(1) {
   padding: min(2.5vh, 2.5vw);
   position: absolute;
   content: url("../arrow.png");
+}
+body .nav section button :nth-child(1):hover {
+  padding: min(2vh, 2vw);
+  cursor: pointer;
 }
 
 .show {
@@ -131,6 +138,9 @@ body .nav section button :nth-child(1) {
   right: min(2vh, 2vw);
   width: min(5vh, 5vw);
   content: url("../x.svg");
+}
+.overlay > article img:hover {
+  cursor: pointer;
 }
 
 .fullscale {

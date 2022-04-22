@@ -88,6 +88,9 @@ body {
 				width: max-content;
 				height: 100%;
 				outline: none;
+                &:hover {
+                    cursor: pointer;
+                }
 				img {
 					height: 100%;
 					content: url("../key.png");
@@ -96,6 +99,10 @@ body {
 					padding: min(2.5vh, 2.5vw);
 					position: absolute;
 					content: url("../arrow.png");
+                    &:hover {
+                        padding: min(2vh, 2vw);
+                        cursor: pointer;
+                    }
 				}
 			}
 		}
@@ -140,6 +147,9 @@ body {
 			right: min(2vh, 2vw);
 			width: min(5vh, 5vw);
 			content: url("../x.svg");
+            &:hover {
+                cursor: pointer;
+            }
 		}
 	}
 }
