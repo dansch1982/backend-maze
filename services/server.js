@@ -77,7 +77,7 @@ class Server {
             return error;
           }
         })();
-
+        
         if (req.url.code) {
           return res.status(500).text("Something went wrong.");
         }
