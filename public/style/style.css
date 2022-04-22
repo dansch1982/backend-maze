@@ -14,7 +14,7 @@ body {
   justify-content: center;
 }
 body .map {
-  background-color: #3F744D;
+  background-color: #3f744d;
   display: grid;
   grid-template-columns: repeat(5, min(20vh, 20vw));
   grid-template-rows: repeat(4, min(20vh, 20vw));
@@ -101,4 +101,38 @@ body .nav section button :nth-child(1) {
 
 .player img {
   content: url("../player.png");
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: min(80vh, 80vw);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.overlay > article {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: min(5vh, 5vw);
+  max-width: min(80vh, 80vw);
+  border-radius: min(2vh, 2vw);
+  font-size: min(4vh, 4vw);
+  background-color: aliceblue;
+  transform: scale(0%);
+  transition: 0.5s ease-in;
+}
+.overlay > article img {
+  position: absolute;
+  top: min(2vh, 2vw);
+  right: min(2vh, 2vw);
+  width: min(5vh, 5vw);
+  content: url("../x.svg");
+}
+
+.fullscale {
+  transform: scale(100%) !important;
 }/*# sourceMappingURL=style.css.map */
