@@ -1,5 +1,4 @@
 const App = {
-  explored: {},
   calcMap() {
     const y = getComputedStyle(this.map).grid.split(" ");
     y.splice(nthIndexOfArray(y, "/", 2));
@@ -7,9 +6,21 @@ const App = {
     x.splice(0, 1);
     this.mapSize = [x.length, y.length];
   },
+  clearMap() {
+    this.map.innerHTML = null;
+  },
   start() {
     this.map = document.querySelector(".map");
+    this.player = document.createElement("article");
+    this.player.classList.add("player");
+    const img = document.createElement("img");
+    this.player.appendChild(img);
     this.calcMap();
+    this.reload();
+  },
+  reload() {
+    this.explored = {}
+    this.clearMap();
     this.fillMap();
     this.createStart();
   },
@@ -22,8 +33,7 @@ const App = {
     this.drawTile();
   },
   drawPlayer() {
-    const player = document.querySelector(".player");
-    this.tile.appendChild(player);
+    this.tile.appendChild(this.player);
   },
   async drawTile() {
     const [x, y] = this.current;
@@ -63,10 +73,7 @@ const App = {
     const data = await (await fetch(url)).json();
 
     this.explored[this.current.join("")] = data;
-    this.tile.style.backgroundImage = `url(./${data.image.replace(
-      "\\",
-      "/"
-    )})`;
+    this.tile.style.backgroundImage = `url(./${data.image.replace("\\", "/")})`;
     this.tile.classList.add("show");
     this.drawPlayer();
     this.checkWinConditions();
@@ -95,9 +102,13 @@ const App = {
   checkWinConditions() {
     const [x, y] = this.mapSize;
     if (Object.keys(this.explored).length >= x * y) {
-      alert(`Victory!\nAll ${x*y} tiles explored.`);
+      alert(`Victory!\nAll ${x * y} tiles explored.`);
     } else if (!this.checkOpen()) {
-      alert(`Game over!\nYou explored ${Object.keys(this.explored).length} / ${x*y} tiles.`);
+      alert(
+        `Game over!\nYou explored ${Object.keys(this.explored).length} / ${
+          x * y
+        } tiles.`
+      );
     }
   },
   checkOpen() {
@@ -156,8 +167,7 @@ const nav = document.querySelector(".nav");
 const buttons = nav.querySelectorAll("button");
 buttons.forEach((button) => {
   button.addEventListener("click", function () {
-    const direction = this.classList[0];
-    App.move(direction);
+    App[this.classList[0]](this.classList[1]);
   });
 });
 document.addEventListener("keydown", (event) => {
