@@ -113,8 +113,7 @@ const App = {
 	},
 	move(direction) {
 		if (!this.explored[this.current.join("")][direction]) return;
-		let [x, y] = this.current;
-		[x, y] = this.changeXY(x, y, direction);
+		const [x, y] = this.changeXY(this.current, direction);
 		this.current = [x, y];
 		this.tile = document.getElementById(`X${x}Y${y}`);
 		if (!this.explored[this.current.join("")]) {
@@ -139,7 +138,7 @@ const App = {
 			for (const key in tile) {
 				const value = tile[key];
 				if (value === true) {
-					const newXY = this.changeXY(xy[0], xy[1], key).join("");
+					const newXY = this.changeXY(xy, key).join("");
 					if (!this.explored[newXY]) {
 						return true;
 					}
@@ -148,7 +147,8 @@ const App = {
 		}
 		return false;
 	},
-	changeXY(x, y, direction) {
+	changeXY(xy, direction) {
+        let [x, y] = xy
 		const [maxX, maxY] = this.mapSize;
 		switch (direction) {
 			case "up":
