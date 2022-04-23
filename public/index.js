@@ -175,10 +175,10 @@ const App = {
 	checkWinConditions() {
 		const [x, y] = this.mapSize;
 		if (Object.keys(this.explored).length >= x * y) {
-			popupText.innerText = `Victory!\nAll ${x * y} tiles explored.`;
+			popupText.innerHTML = `<b>Victory!</b><br />>All ${x * y} tiles explored.`;
 			popup.classList.add("fullscale");
 		} else if (!this.checkOpen()) {
-			popupText.innerText = `Game over!\nYou explored ${Object.keys(this.explored).length} / ${
+			popupText.innerHTML = `<b>Game over!</b><br />You explored ${Object.keys(this.explored).length} / ${
 				x * y
 			} tiles.`;
 			popup.classList.add("fullscale");
