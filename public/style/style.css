@@ -29,12 +29,12 @@ body .map article {
   background-repeat: no-repeat;
   background-size: contain;
 }
-body .map article .player {
+body .map article article {
   width: 100%;
   height: 100%;
 }
-body .map article .player img {
-  width: 15%;
+body .map article article img {
+  width: min(3.25vh, 3.25vw);
 }
 body .nav {
   height: min(20vh, 20vw);
@@ -60,14 +60,28 @@ body .nav section {
   height: 50%;
   width: 100%;
 }
-body .nav section :nth-child(4) {
+body .nav section .reload {
   position: absolute;
   right: 0;
 }
-body .nav section :nth-child(4) :nth-child(1) {
+body .nav section .reload :nth-child(1) {
   padding: min(2.5vh, 2.5vw);
   position: absolute;
   content: url("../reload.svg");
+}
+body .nav section .showInfo {
+  position: absolute;
+  left: 0;
+}
+body .nav section .showInfo :nth-child(1) {
+  padding: min(2.5vh, 2.5vw);
+  position: absolute;
+  content: url("../info.svg");
+}
+body .nav section .move :nth-child(1) {
+  padding: min(2.5vh, 2.5vw);
+  position: absolute;
+  content: url("../arrow.svg");
 }
 body .nav section button {
   border: none;
@@ -89,11 +103,6 @@ body .nav section button img {
   height: 100%;
   content: url("../key.png");
 }
-body .nav section button :nth-child(1) {
-  padding: min(2.5vh, 2.5vw);
-  position: absolute;
-  content: url("../arrow.png");
-}
 body .nav section button :nth-child(1):hover {
   padding: min(2vh, 2vw);
   cursor: pointer;
@@ -106,10 +115,6 @@ body .nav section button :nth-child(1):hover {
   opacity: 100% !important;
 }
 
-.player img {
-  content: url("../player.png");
-}
-
 .overlay {
   position: fixed;
   top: 0;
@@ -120,26 +125,28 @@ body .nav section button :nth-child(1):hover {
   justify-content: center;
   align-items: center;
 }
-.overlay > article {
+.overlay article {
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: min(5vh, 5vw);
+  padding: min(3vh, 3vw) min(8vh, 8vw) min(3vh, 3vw) min(3vh, 3vw);
   max-width: min(80vh, 80vw);
+  max-height: min(60vh, 60vw);
+  overflow-x: hidden;
+  overflow-y: auto;
   border-radius: min(2vh, 2vw);
   font-size: min(4vh, 4vw);
   background-color: aliceblue;
   transform: scale(0%);
   transition: 0.5s ease-in;
 }
-.overlay > article img {
+.overlay article img {
   position: absolute;
   top: min(2vh, 2vw);
   right: min(2vh, 2vw);
   width: min(5vh, 5vw);
   content: url("../x.svg");
 }
-.overlay > article img:hover {
+.overlay article img:hover {
   cursor: pointer;
 }
 

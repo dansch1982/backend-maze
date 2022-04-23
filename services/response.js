@@ -9,7 +9,10 @@ class Response {
         "text/css": [".css"],
         "text/plain": ".txt",
         "image/jpeg": [".jpeg", ".jpg"],
-        "image/svg+xml": [".svg"]
+        "image/png": [".png"],
+        "image/svg+xml": [".svg"],
+        "image/gif": [".gif"],
+        "image/vnd.microsoft.icon": [".ico"]
     } 
     constructor(res) {
         this.#res = res
@@ -69,7 +72,10 @@ class Response {
             }
         })
     }
-    end(data) {
+    end(data, mimeType) {
+        if (mimeType) {
+            this.setHeader('Content-Type', mimeType)
+        }
         this.configRes()
         this.#res.end(data || "")
     }

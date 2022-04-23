@@ -2,7 +2,11 @@ const nav = document.querySelector(".nav");
 const buttons = nav.querySelectorAll("button");
 buttons.forEach((button) => {
 	button.addEventListener("click", function () {
-		App[this.classList[0]](this.classList[1]);
+		try {
+			App[this.classList[0]](this.classList[1]);
+		} catch (error) {
+			console.log(error);
+		}
 	});
 });
 
@@ -13,17 +17,17 @@ document.addEventListener("keydown", (event) => {
 	}
 });
 
-const overlay = document.querySelector('.overlay')
-overlay.addEventListener('click', function(event) {
-    if (event.target !== this) return;
-    popup.classList.remove('fullscale')
-})
-const popup = overlay.querySelector('article')
-const popupText = overlay.querySelector('p')
-const popupClose = overlay.querySelector('img')
-popupClose.addEventListener('click', () => {
-    overlay.click()
-})
+const overlay = document.querySelector(".overlay");
+overlay.addEventListener("click", function (event) {
+	if (event.target !== this) return;
+	popup.classList.remove("fullscale");
+});
+const popup = overlay.querySelector("article");
+const popupText = overlay.querySelector("p");
+const popupClose = overlay.querySelector("img");
+popupClose.addEventListener("click", () => {
+	overlay.click();
+});
 
 const App = {
 	calcMap() {
@@ -36,20 +40,55 @@ const App = {
 	clearMap() {
 		this.map.innerHTML = null;
 	},
+	async createPlayer() {
+		const url = new URL("getPlayer", window.location.origin);
+		const playerData = await (await fetch(url)).json();
+
+		this.player = {
+			element: document.createElement("article"),
+			info: playerData.info,
+		};
+
+		const image = document.createElement("img");
+		image.src = `data:${playerData.image.mimeType};base64,${playerData.image.data}`;
+		this.player.element.appendChild(image);
+		/* fetch(url)
+			.then((response) => {
+				const reader = response.body.getReader();
+				return new ReadableStream({
+					start(controller) {
+						return (async () => {
+							while (
+								await reader.read().then(({ done, value }) => {
+									if (done) {
+										controller.close();
+										return false;
+									}
+									controller.enqueue(value);
+									return true;
+								})
+							) {}
+						})();
+					},
+				});
+			})
+			.then((stream) => new Response(stream))
+			.then((response) => response.blob())
+			.then((blob) => URL.createObjectURL(blob))
+			.then((url) => (image.src = url))
+			.catch((err) => console.error(err)); */
+	},
 	start() {
 		this.map = document.querySelector(".map");
-		this.player = document.createElement("article");
-		this.player.classList.add("player");
-		const img = document.createElement("img");
-		this.player.appendChild(img);
 		this.calcMap();
 		this.reload();
 	},
-	reload() {
+	async reload() {
 		this.explored = {};
-        popup.classList.remove('fullscale')
+		popup.classList.remove("fullscale");
 		this.clearMap();
 		this.fillMap();
+		await this.createPlayer();
 		this.createStart();
 	},
 	createStart() {
@@ -60,8 +99,8 @@ const App = {
 		this.tile = document.getElementById(`X${x}Y${y}`);
 		this.drawTile();
 	},
-	drawPlayer() {
-		this.tile.appendChild(this.player);
+	movePlayer() {
+		this.tile.appendChild(this.player.element);
 	},
 	async drawTile() {
 		const [x, y] = this.current;
@@ -99,7 +138,7 @@ const App = {
 		this.explored[this.current.join("")] = data;
 		this.tile.style.backgroundImage = `url(./${data.image.replace("\\", "/")})`;
 		this.tile.classList.add("show");
-		this.drawPlayer();
+		this.movePlayer();
 		this.checkWinConditions();
 	},
 	fillMap() {
@@ -113,23 +152,36 @@ const App = {
 	},
 	move(direction) {
 		if (!this.explored[this.current.join("")][direction]) return;
-		const [x, y] = this.changeXY(this.current, direction);
-		this.current = [x, y];
+		this.current = this.changeXY(this.current, direction);
+		const [x, y] = this.current;
 		this.tile = document.getElementById(`X${x}Y${y}`);
 		if (!this.explored[this.current.join("")]) {
 			this.drawTile(direction);
 		} else {
-			this.drawPlayer();
+			this.movePlayer();
 		}
+	},
+	showInfo() {
+		let htmlString = "<b>Player model:</b><br />";
+        try {
+            const url = new URL(this.player.info)
+            htmlString += `<a href="${this.player.info}" target="_blank" rel="noopener noreferrer">${this.player.info}</a>`;
+        } catch (error) {
+            htmlString += this.player.info           
+        }
+		popupText.innerHTML = htmlString;
+		popup.classList.add("fullscale");
 	},
 	checkWinConditions() {
 		const [x, y] = this.mapSize;
 		if (Object.keys(this.explored).length >= x * y) {
-			popupText.innerText = `Victory!\nAll ${x * y} tiles explored.`
-            popup.classList.add('fullscale')
+			popupText.innerText = `Victory!\nAll ${x * y} tiles explored.`;
+			popup.classList.add("fullscale");
 		} else if (!this.checkOpen()) {
-            popupText.innerText = `Game over!\nYou explored ${Object.keys(this.explored).length} / ${x * y} tiles.`
-            popup.classList.add('fullscale')
+			popupText.innerText = `Game over!\nYou explored ${Object.keys(this.explored).length} / ${
+				x * y
+			} tiles.`;
+			popup.classList.add("fullscale");
 		}
 	},
 	checkOpen() {
@@ -148,7 +200,7 @@ const App = {
 		return false;
 	},
 	changeXY(xy, direction) {
-        let [x, y] = xy
+		let [x, y] = xy;
 		const [maxX, maxY] = this.mapSize;
 		switch (direction) {
 			case "up":
@@ -167,9 +219,9 @@ const App = {
 				break;
 		}
 		if (x > maxX) x = 1;
-		if (x < 1) x = maxX;
-		if (y > maxY) y = 1;
-		if (y < 1) y = maxY;
+		else if (x < 1) x = maxX;
+		else if (y > maxY) y = 1;
+		else if (y < 1) y = maxY;
 		return [x, y];
 	},
 };
