@@ -28,7 +28,7 @@ class Server {
     for (const method of this.#methods) {
       methods[method] = {
         URIs: [],
-        default: {},
+        default: null,
       };
       this[method.toLowerCase()] = (uri, func, ...args) => {
         this.#addURI(method, uri, func, ...args);
@@ -43,8 +43,10 @@ class Server {
   default(method, func, ...args) {
     typeCheck(arguments, String(), [Function]);
     method = method.toUpperCase();
-    this.#methods[method]["default"].function = func;
-    this.#methods[method]["default"].args = args;
+    this.#methods[method]["default"] = {
+      function: func,
+      args, args
+    }
   }
   #addURI(method, uri, func, ...args) {
     typeCheck(arguments, String(), String(), Function);
@@ -56,12 +58,15 @@ class Server {
   run(req, res) {
     const method = req.method;
     const uri = req.parts[0] || "/";
-    try {
-      const callback =
-        this.#methods[method]["URIs"][uri] || this.#methods[method]["default"];
-      callback.function(req, res, callback.args);
-    } catch (error) {
-      console.log(error);
+    const callback = this.#methods[method]["URIs"][uri] || this.#methods[method]["default"];
+    if (callback) {
+      try {
+        callback.function(req, res, callback.args);
+      } catch (error) {
+        console.log(error);
+        res.status(500).text("Something went wrong.");
+      }
+    } else {
       res.status(404).text("Page not found.");
     }
   }
