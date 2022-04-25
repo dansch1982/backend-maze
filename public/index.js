@@ -14,13 +14,18 @@ document.addEventListener("keydown", (event) => {
 	if (event.key.startsWith("Arrow")) {
 		const direction = event.key.substring(5).toLowerCase();
 		App.move(direction);
+	} else if (event.key === "Enter") {
+		event.preventDefault();
+		App.reload();
+	} else if (event.key === "Escape") {
+		popup.classList.remove("fullscale");
 	}
 });
 
 const overlay = document.querySelector(".overlay");
 overlay.addEventListener("click", function (event) {
 	if (event.target !== this) return;
-	popup.classList.remove("fullscale");
+	App.hidePopup();
 });
 const popup = overlay.querySelector("article");
 const popupText = overlay.querySelector("p");
@@ -39,6 +44,7 @@ const App = {
 	},
 	clearMap() {
 		this.map.innerHTML = null;
+		this.explored = {};
 	},
 	async createPlayer() {
 		const url = new URL("getPlayer", window.location.origin);
@@ -46,12 +52,12 @@ const App = {
 
 		this.player = {
 			element: document.createElement("article"),
+			model: document.createElement("img"),
 			info: playerData.info,
 		};
 
-		const image = document.createElement("img");
-		image.src = `data:${playerData.image.mimeType};base64,${playerData.image.data}`;
-		this.player.element.appendChild(image);
+		this.player.model.src = `data:${playerData.image.mimeType};base64,${playerData.image.data}`;
+		this.player.element.append(this.player.model);
 		/* fetch(url)
 			.then((response) => {
 				const reader = response.body.getReader();
@@ -84,8 +90,7 @@ const App = {
 		this.reload();
 	},
 	async reload() {
-		this.explored = {};
-		popup.classList.remove("fullscale");
+		this.hidePopup();
 		this.clearMap();
 		this.fillMap();
 		await this.createPlayer();
@@ -162,27 +167,44 @@ const App = {
 		}
 	},
 	showInfo() {
+		const dataShowing = popup.getAttribute("data-showing");
+		if (dataShowing) {
+			if (dataShowing === "score") {
+				popup.addEventListener("transitionend",() => {
+					this.showInfo();
+				},{ once: true });
+			}
+			return this.hidePopup();
+		}
 		let htmlString = "<b>Player model:</b><br />";
-        try {
-            const url = new URL(this.player.info)
-            htmlString += `<a href="${this.player.info}" target="_blank" rel="noopener noreferrer">${this.player.info}</a>`;
-        } catch (error) {
-            htmlString += this.player.info           
-        }
-		popupText.innerHTML = htmlString;
-		popup.classList.add("fullscale");
+		try {
+			const url = new URL(this.player.info);
+			htmlString += `<a href="${url}" target="_blank" rel="noopener noreferrer">${this.player.info}</a>`;
+		} catch (error) {
+			htmlString += this.player.info;
+		}
+		this.showPopup(htmlString, "info");
 	},
 	checkWinConditions() {
 		const [x, y] = this.mapSize;
+		let htmlString;
 		if (Object.keys(this.explored).length >= x * y) {
-			popupText.innerHTML = `<b>Victory!</b><br />>All ${x * y} tiles explored.`;
-			popup.classList.add("fullscale");
+			htmlString = `<b>Victory!</b><br />All ${x * y} tiles explored.`;
 		} else if (!this.checkOpen()) {
-			popupText.innerHTML = `<b>Game over!</b><br />You explored ${Object.keys(this.explored).length} / ${
-				x * y
-			} tiles.`;
-			popup.classList.add("fullscale");
+			htmlString = `<b>Game over!</b><br />You explored ${Object.keys(this.explored).length} / ${x * y} tiles.`;
 		}
+		if (htmlString) {
+			this.showPopup(htmlString, "score");
+		}
+	},
+	hidePopup() {
+		popup.removeAttribute("data-showing");
+		popup.classList.remove("fullscale");
+	},
+	showPopup(data, type) {
+		popupText.innerHTML = data;
+		popup.setAttribute("data-showing", type);
+		popup.classList.add("fullscale");
 	},
 	checkOpen() {
 		for (const xy in this.explored) {
