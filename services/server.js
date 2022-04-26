@@ -41,7 +41,7 @@ class Server {
     this.#static = folder;
   }
   default(method, func, ...args) {
-    typeCheck(arguments, String(), [Function]);
+    typeCheck(arguments, String(), [Function, async Function=>{}]);
     method = method.toUpperCase();
     this.#methods[method]["default"] = {
       function: func,
@@ -49,7 +49,7 @@ class Server {
     }
   }
   #addURI(method, uri, func, ...args) {
-    typeCheck(arguments, String(), String(), Function);
+    typeCheck(arguments, String(), String(), [Function, async Function=>{}]);
     this.#methods[method]["URIs"][uri] = {
       function: func,
       args: args,

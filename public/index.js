@@ -11,14 +11,27 @@ buttons.forEach((button) => {
 });
 
 document.addEventListener("keydown", (event) => {
-	if (event.key.startsWith("Arrow")) {
-		const direction = event.key.substring(5).toLowerCase();
-		App.move(direction);
-	} else if (event.key === "Enter") {
+	const key = event.key.toLowerCase()
+	if (key.startsWith("arrow")) {
+		switch (key) {
+			case "arrowleft":
+				App.move("west");
+				break;
+			case "arrowup":
+				App.move("north");
+				break;
+			case "arrowright":
+				App.move("east");
+				break;
+			case "arrowdown":
+				App.move("south");
+				break;
+		}
+	} else if (key === "enter") {
 		event.preventDefault();
 		App.reload();
-	} else if (event.key === "Escape") {
-		popup.classList.remove("fullscale");
+	} else if (key === "escape") {
+		App.hidePopup()
 	}
 });
 
@@ -111,23 +124,23 @@ const App = {
 		const [x, y] = this.current;
 		const [maxX, maxY] = this.mapSize;
 
-		const left = x === 1 ? maxX : x - 1;
-		const right = x === maxX ? 1 : x + 1;
-		const up = y === 1 ? maxY : y - 1;
-		const down = y === maxY ? 1 : y + 1;
+		const west = x === 1 ? maxX : x - 1;
+		const east = x === maxX ? 1 : x + 1;
+		const north = y === 1 ? maxY : y - 1;
+		const south = y === maxY ? 1 : y + 1;
 
 		let string = "";
 
-		if (this.explored[`${left}${y}`]) string += this.explored[`${left}${y}`]["right"] ? "y" : "n";
+		if (this.explored[`${west}${y}`]) string += this.explored[`${west}${y}`]["east"] ? "y" : "n";
 		else string += "?";
 
-		if (this.explored[`${x}${up}`]) string += this.explored[`${x}${up}`]["down"] ? "y" : "n";
+		if (this.explored[`${x}${north}`]) string += this.explored[`${x}${north}`]["south"] ? "y" : "n";
 		else string += "?";
 
-		if (this.explored[`${right}${y}`]) string += this.explored[`${right}${y}`]["left"] ? "y" : "n";
+		if (this.explored[`${east}${y}`]) string += this.explored[`${east}${y}`]["west"] ? "y" : "n";
 		else string += "?";
 
-		if (this.explored[`${x}${down}`]) string += this.explored[`${x}${down}`]["up"] ? "y" : "n";
+		if (this.explored[`${x}${south}`]) string += this.explored[`${x}${south}`]["north"] ? "y" : "n";
 		else string += "?";
 
 		const url = new URL("getTile", window.location.origin);
@@ -141,7 +154,7 @@ const App = {
 		const data = await (await fetch(url)).json();
 
 		this.explored[this.current.join("")] = data;
-		this.tile.style.backgroundImage = `url(./${data.image.replace("\\", "/")})`;
+		this.tile.style.backgroundImage = `url(data:${data.image.mimeType};base64,${data.image.data})`;
 		this.tile.classList.add("show");
 		this.movePlayer();
 		this.checkWinConditions();
@@ -225,16 +238,16 @@ const App = {
 		let [x, y] = xy;
 		const [maxX, maxY] = this.mapSize;
 		switch (direction) {
-			case "up":
+			case "north":
 				y--;
 				break;
-			case "down":
+			case "south":
 				y++;
 				break;
-			case "left":
+			case "west":
 				x--;
 				break;
-			case "right":
+			case "east":
 				x++;
 				break;
 			default:
