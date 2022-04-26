@@ -57,6 +57,7 @@ const App = {
 	},
 	clearMap() {
 		this.map.innerHTML = null;
+		this.mapInfo = {}
 		this.explored = {};
 	},
 	async createPlayer() {
@@ -151,9 +152,20 @@ const App = {
 				url.searchParams.append(key, value);
 			}
 		}
+		if (this.mapInfo["theme"]) {
+			url.searchParams.append("theme", this.mapInfo["theme"])
+		}
 		const data = await (await fetch(url)).json();
 
 		this.explored[this.current.join("")] = data;
+
+		if (!this.mapInfo["theme"]) {
+			this.mapInfo = {
+				"theme" : data.image.theme,
+				"info": data.image.info
+			}
+		}
+
 		this.tile.style.backgroundImage = `url(data:${data.image.mimeType};base64,${data.image.data})`;
 		this.tile.classList.add("show");
 		this.movePlayer();
@@ -195,6 +207,13 @@ const App = {
 			htmlString += `<a href="${url}" target="_blank" rel="noopener noreferrer">${this.player.info}</a>`;
 		} catch (error) {
 			htmlString += this.player.info;
+		}
+		htmlString += "<br /><br /><b>Map tileset:</b><br />";
+		try {
+			const url = new URL(this.mapInfo.info);
+			htmlString += `<a href="${url}" target="_blank" rel="noopener noreferrer">${this.mapInfo.info}</a>`;
+		} catch (error) {
+			htmlString += this.mapInfo.info;
 		}
 		this.showPopup(htmlString, "info");
 	},

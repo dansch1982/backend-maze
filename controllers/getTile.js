@@ -13,7 +13,7 @@ async function getTile(req, res) {
 		const detail = {};
 
 		const image = sharp(imagePath);
-		detail.scr = await image.metadata().then((metadata) => {
+		detail.image = await image.metadata().then((metadata) => {
 			detail["width"] = metadata.width;
 			detail["height"] = metadata.height;
 			return image
@@ -55,7 +55,7 @@ async function getTile(req, res) {
 			const [first, second] = direction;
 			const detail = await getDetail();
 			const object = {
-				input: detail.scr,
+				input: detail.image,
 				top: positions[first](metadata, detail.height),
 				left: positions[second](metadata, detail.height),
 			};
@@ -65,6 +65,8 @@ async function getTile(req, res) {
 	})();
 
 	const open = req.url.searchParams.get("open") || "????";
+	const theme = req.url.searchParams.get("theme");
+	console.log(theme)
 	const object = {};
 	const cardinals = ["west", "north", "east", "south"];
 	for (let i = 0; i < cardinals.length; i++) {
@@ -96,6 +98,8 @@ async function getTile(req, res) {
 	object.image = {};
 	object.image.data = (await image.composite(compositeArray).png().toBuffer()).toString("base64");
 	object.image.mimeType = res.getMimeType(".png");
+	object.image.info = "https://opengameart.org/content/outdoor-tiles-again"
+	object.image.theme = "outdoor-tiles-again"
 	res.status(200).json(object);
 }
 
