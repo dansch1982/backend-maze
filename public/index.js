@@ -49,11 +49,9 @@ popupClose.addEventListener("click", () => {
 
 const App = {
 	calcMap() {
-		const y = getComputedStyle(this.map).grid.split(" ");
-		y.splice(nthIndexOfArray(y, "/", 2));
-		const x = y.splice(y.indexOf("/"));
-		x.splice(0, 1);
-		this.mapSize = [x.length, y.length];
+		const x = getComputedStyle(this.map).gridTemplateColumns.split(" ").length
+		const y = getComputedStyle(this.map).gridTemplateRows.split(" ").length
+		this.mapSize = [x, y];
 	},
 	clearMap() {
 		this.map.innerHTML = null;
