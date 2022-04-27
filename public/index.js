@@ -281,15 +281,3 @@ const App = {
 };
 
 App.start();
-
-function nthIndexOfArray(array, item, index) {
-	if (index < 1 || isNaN(index) || array.indexOf(item) < 0) {
-		return -1;
-	} else if (index === 1) {
-		return array.indexOf(item);
-	} else {
-		const newIndex = array.indexOf(item) + 1;
-		const newArray = array.slice(newIndex);
-		return newIndex + nthIndexOfArray(newArray, item, index - 1);
-	}
-}
