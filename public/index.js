@@ -108,15 +108,16 @@ const App = {
 		this.clearMap();
 		this.fillMap();
 		await this.createPlayer();
-		this.createStart();
+		await this.createStart();
+		this.drawTile();
+
 	},
-	createStart() {
+	async createStart() {
 		let [x, y] = this.mapSize;
 		x = Math.floor(Math.random() * x) + 1;
 		y = Math.floor(Math.random() * y) + 1;
 		this.current = [x, y];
 		this.tile = document.getElementById(`X${x}Y${y}`);
-		this.drawTile();
 	},
 	movePlayer() {
 		this.tile.appendChild(this.player.element);
@@ -165,7 +166,6 @@ const App = {
 				"info": data.image.info
 			}
 		}
-
 		this.tile.style.backgroundImage = `url(data:${data.image.mimeType};base64,${data.image.data})`;
 		this.tile.classList.add("show");
 		this.movePlayer();
@@ -174,11 +174,13 @@ const App = {
 	fillMap() {
 		const [x, y] = this.mapSize;
 		const loops = x * y;
+		const articles = []
 		for (let i = 0; i < loops; i++) {
 			const article = document.createElement("article");
 			article.id = `X${(i % x) + 1}Y${Math.floor(i / x + 1)}`;
-			this.map.appendChild(article);
+			articles.push(article)
 		}
+		this.map.append(...articles);
 	},
 	move(direction) {
 		if (!this.explored[this.current.join("")][direction]) return;
@@ -279,6 +281,7 @@ const App = {
 		return [x, y];
 	},
 };
+
 App.start();
 
 function nthIndexOfArray(array, item, index) {
