@@ -12,7 +12,8 @@ class Response {
         "image/png": [".png"],
         "image/svg+xml": [".svg"],
         "image/gif": [".gif"],
-        "image/vnd.microsoft.icon": [".ico"]
+        "image/vnd.microsoft.icon": [".ico"],
+        "text/javascript": [".js"]
     } 
     constructor(res) {
         this.#res = res
