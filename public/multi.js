@@ -1,9 +1,119 @@
+const socket = new WebSocket(`ws://${window.location.hostname}:1234`)
+
+socket.addEventListener('open', () => {
+    console.log("Connection", true)
+	socket.send(JSON.stringify({"createPlayer":maze.mapSize}))
+})
+socket.addEventListener('message', (message) => {
+	const data = JSON.parse(message.data)
+	if (Array.isArray(data)) {
+		maze.players = JSON.parse(message.data)
+		maze.placePlayers()
+	} else {
+		maze.id = data.id
+	}
+})
+socket.addEventListener('ping', () => {
+	console.log("pong")
+})
+
+class Maze {
+	constructor(map) {
+		this.map = map;
+		this.init()
+	}
+	async init() {
+		this.calcMap()
+		this.fillMap()
+		await this.getMap()
+	}
+	calcMap() {
+		const x = getComputedStyle(this.map).gridTemplateColumns.split(" ").length
+		const y = getComputedStyle(this.map).gridTemplateRows.split(" ").length
+		this.mapSize = [x, y];
+	}
+	fillMap() {
+		const [x, y] = this.mapSize;
+		const loops = x * y;
+		const articles = []
+		for (let i = 0; i < loops; i++) {
+			const article = document.createElement("article");
+			article.id = `X${(i % x) + 1}Y${Math.floor(i / x + 1)}`;
+			articles.push(article)
+		}
+		this.map.append(...articles);
+	}
+	async getMap() {
+		const url = new URL("getMap", window.location.origin);
+
+		const searchParams = new URLSearchParams();
+		searchParams.append("mapSize", this.mapSize);
+		if (searchParams) {
+			for (const [key, value] of searchParams) {
+				url.searchParams.append(key, value);
+			}
+		}
+
+		const data = await (await fetch(url)).json();
+		this.explored = data.explored
+		for (const key in this.explored) {
+				const tileInfo = this.explored[key];
+				const tile = document.querySelector(`#${key}`)
+				tile.style.backgroundImage = `url(data:${tileInfo.image.mimeType};base64,${tileInfo.image.data})`;
+				tile.style.opacity = 1
+		}
+	}
+	placePlayers() {
+		const players = document.querySelectorAll('.player')
+		players.forEach(player => {
+			player.parentElement.removeChild(player)
+		})
+		this.players.forEach(player => {
+
+			const playerObject = {
+				element: document.createElement("article"),
+				model: document.createElement("img"),
+			}
+			playerObject.element.classList.add('player')
+			playerObject.model.src = `data:${player.playerData.image.mimeType};base64,${player.playerData.image.data}`;
+			playerObject.element.append(playerObject.model);
+			const id = `X${player.x}Y${player.y}`
+			const tile = document.getElementById(id)
+			playerObject.element.style.opacity = 1
+			tile.append(playerObject.element)
+			if (player.id === this.id) {
+				this.player = player
+				playerObject.model.style.boxShadow = "rgba(255, 255, 255, 0.5) 0px 0px 20px 10px"
+				playerObject.model.style.borderRadius = "50%"
+
+			}
+		})
+	}
+	move(direction) {
+		const id = `X${this.player.x}Y${this.player.y}`
+		if (!this.explored[id][direction]) {
+			return
+		} else {
+			socket.send(JSON.stringify({"movePlayer":direction}))
+		}
+		/* this.current = this.changeXY(this.current, direction);
+		const [x, y] = this.current;
+		this.tile = document.getElementById(`X${x}Y${y}`);
+		if (!this.explored[this.current.join("")]) {
+			this.drawTile(direction);
+		} else {
+			this.movePlayer();
+		} */
+	}
+}
+const maze = new Maze(document.querySelector(".map"))
+
 const nav = document.querySelector(".nav");
 const buttons = nav.querySelectorAll("button");
 buttons.forEach((button) => {
 	button.addEventListener("click", function () {
 		try {
-			App[this.classList[0]](this.classList[1]);
+			maze[this.classList[0]](this.classList[1]);
 		} catch (error) {
 			console.log(error);
 		}
@@ -15,23 +125,18 @@ document.addEventListener("keydown", (event) => {
 	if (key.startsWith("arrow")) {
 		switch (key) {
 			case "arrowleft":
-				App.move("west");
+				maze.move("west");
 				break;
 			case "arrowup":
-				App.move("north");
+				maze.move("north");
 				break;
 			case "arrowright":
-				App.move("east");
+				maze.move("east");
 				break;
 			case "arrowdown":
-				App.move("south");
+				maze.move("south");
 				break;
 		}
-	} else if (key === "enter") {
-		event.preventDefault();
-		App.reload();
-	} else if (key === "escape") {
-		App.hidePopup()
 	}
 });
 
@@ -201,7 +306,7 @@ const App = {
 			}
 			return this.hidePopup();
 		}
-		let htmlString = "<b>Player model:</b><br />";
+		let htmlString = "<b>Player image:</b><br />";
 		try {
 			const url = new URL(this.player.info);
 			htmlString += `<a href="${url}" target="_blank" rel="noopener noreferrer">${this.player.info}</a>`;
@@ -280,4 +385,4 @@ const App = {
 	},
 };
 
-App.start();
+//App.start();

@@ -201,7 +201,7 @@ const App = {
 			}
 			return this.hidePopup();
 		}
-		let htmlString = "<b>Player model:</b><br />";
+		let htmlString = "<b>Player image:</b><br />";
 		try {
 			const url = new URL(this.player.info);
 			htmlString += `<a href="${url}" target="_blank" rel="noopener noreferrer">${this.player.info}</a>`;

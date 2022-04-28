@@ -1,3 +1,5 @@
+
+
 const Server = require("./services/server");
 
 const server = new Server({
@@ -18,5 +20,8 @@ server.default("get", (req, res) => {
 const getTile = require("./controllers/getTile");
 server.get("getTile", getTile);
 
-const getPlayer = require("./controllers/getPlayer");
+const [getPlayer] = require("./controllers/getPlayer");
 server.get("getPlayer", getPlayer);
+
+const getMap = require("./controllers/getMap");
+server.get("getMap", getMap)
