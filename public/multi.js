@@ -1,4 +1,5 @@
-const socket = new WebSocket(`ws://${window.location.hostname}:1234`)
+const HOST = location.origin.replace(/^http/, 'ws')
+const socket = new WebSocket(HOST);
 
 socket.addEventListener('open', () => {
     console.log("Connection", true)

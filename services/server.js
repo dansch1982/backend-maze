@@ -70,10 +70,13 @@ class Server {
       res.status(404).text("Page not found.");
     }
   }
+  getHTTP() {
+    return this.http
+  }
   listen(port, callback) {
     typeCheck(arguments, Number(), [Function, undefined]);
     const http = require("http");
-    http.createServer((req, res) => {
+    this.http = http.createServer((req, res) => {
         req.url = (function () {
           const host = "http" + "://" + req.headers.host + "/";
           try {
