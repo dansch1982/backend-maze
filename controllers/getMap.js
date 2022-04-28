@@ -39,8 +39,8 @@ function buildString(x, y, width, height, explored) {
 
     const cardinals = ["west", "north", "east", "south"];
     for (const cardinal of cardinals) {
-        [xx, yy] = (checkDirection(x, y, width, height, cardinal))
-        const id = `X${xx}Y${yy}`;
+        const [newX, newY] = (checkDirection(x, y, width, height, cardinal))
+        const id = `X${newX}Y${newY}`;
         if (!explored[id]) {
             string += "?"
         } else {
