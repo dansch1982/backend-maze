@@ -96,6 +96,9 @@ class Maze {
 			socket.send(JSON.stringify({"movePlayer":{"direction":direction,"mapSize":{"x":x,"y":y}}}))
 		}
 	}
+	reload() {
+		socket.send(JSON.stringify({"getPlayer":maze.mapSize}))
+	}
 }
 const maze = new Maze(document.querySelector(".map"))
 
