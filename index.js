@@ -27,66 +27,70 @@ const [getMap, checkDirection] = require("./controllers/getMap");
 server.get("getMap", getMap)
 
 const WebSocketServer = require("ws");
-/* 
-
-const websocket = new WebSocketServer.Server({
-	server:server.getHTTP()
-}); */
-
 
 const websocket = new WebSocketServer.Server({
 	server:server.getHTTP()
 });
 
-
 websocket.on("connection", (socket) => {
     console.log("Connection", true)
+
     const id = new Date()
     socket.id = id
-    const playerData = {
+
+	socket.send(JSON.stringify({"id":id}))
+    
+	const playerData = {
         "playerData":getPlayerData(),
         "x": null,
         "y": null,
         "id": id,
     }
     socket.playerData = playerData
-    socket.send(JSON.stringify({"id":id}))
     
 	socket.on('message', (data) => {
         const object = JSON.parse(data)
-        const key = Object.keys(object)[0]
-        const value = Object.values(object)[0]
-        switch (key) {
-            case "createPlayer":
-                let [x, y] = value
-                x = Math.floor(Math.random() * x) + 1;
-                y = Math.floor(Math.random() * y) + 1;
-                socket["playerData"]["x"] = x
-                socket["playerData"]["y"] = y
-                break;
-            case "movePlayer":
-                const [sockmoveX, sockmoveY] = checkDirection(socket["playerData"]["x"], socket["playerData"]["y"], 5, 4, value)
-                socket["playerData"]["x"] = sockmoveX
-                socket["playerData"]["y"] = sockmoveY
-            break;
-            default:
-                break;
-        }
-        sendPlayerData(websocket)
+		for (const key in object) {
+				const value = object[key];
+				switch (key) {
+					case "placePlayer":
+						placePlayer(socket, value)
+						break;
+					case "movePlayer":
+						movePlayer(socket, value)
+						break;
+					default:
+						break;
+				}
+				sendPlayerData(websocket)
+		}
     })
 });
 function sendPlayerData() {
-    const datas = []
+    const data = []
     websocket.clients.forEach(client => {
-        datas.push(client.playerData)
+        data.push(client.playerData)
     })
     websocket.clients.forEach(client => {
-        client.send(JSON.stringify(datas))
+        client.send(JSON.stringify(data))
     })
+}
+function placePlayer(socket, value) {
+	const [maxX, maxY] = value
+	const x = Math.floor(Math.random() * maxX) + 1;
+	const y = Math.floor(Math.random() * maxY) + 1;
+	socket["playerData"]["x"] = x
+	socket["playerData"]["y"] = y
+}
+function movePlayer(socket, value) {
+	const [direction, mapSize] = Object.values(value)
+	const [x, y] = checkDirection(socket["playerData"]["x"], socket["playerData"]["y"], mapSize.x, mapSize.y, direction)
+	socket["playerData"]["x"] = x
+	socket["playerData"]["y"] = y
 }
 
 const socketID = []
-const interval = setInterval(function ping() {
+const interval = setInterval(() => {
     socketIDLength = socketID.length
     socketID.length = 0
     websocket.clients.forEach(function each(socket) {
